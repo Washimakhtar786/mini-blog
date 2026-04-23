@@ -11,6 +11,7 @@ function PostDetail() {
       const res = await axios.get(`/posts/${id}`);
       setPost(res.data);
     }
+
     fetchPost();
   }, [id]);
 
@@ -18,7 +19,7 @@ function PostDetail() {
 
   return (
     <div>
-      <h2>{post.title}</h2>
+      <h2 className="text-2xl font-bold mb-3">{post.title}</h2>
       <p>{post.body}</p>
     </div>
   );

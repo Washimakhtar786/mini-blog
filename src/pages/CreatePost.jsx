@@ -21,17 +21,34 @@ function CreatePost() {
     setLoading(true);
 
     try {
+      // optional API (fake)
       await axios.post("/posts", { title, body });
 
+      // ✅ LOCAL STORAGE SAVE (MAIN FIX)
+      const newPost = {
+        id: Date.now(),
+        title,
+        body,
+      };
+
+      const existing =
+        JSON.parse(localStorage.getItem("posts")) || [];
+
+      localStorage.setItem(
+        "posts",
+        JSON.stringify([newPost, ...existing])
+      );
+
+      // reset form
       setTitle("");
       setBody("");
 
-      // ✅ Toast success
-      // ✅ Alert + Toast both
-    alert("Post created successfully ✅");
+      // ✅ ALERT
+      alert("Post created successfully ✅");
 
-    setToast("Post created successfully ✅");
-    setTimeout(() => setToast(""), 3000);
+      // ✅ TOAST
+      setToast("Post created successfully ✅");
+      setTimeout(() => setToast(""), 3000);
 
     } catch (err) {
       setError("Something went wrong ❌");
@@ -41,13 +58,11 @@ function CreatePost() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center 
-      bg-black px-4">
+    <div className="min-h-screen flex items-center justify-center bg-black px-4">
 
       {/* TOAST */}
       {toast && (
-        <div className="fixed top-5 right-5 
-          bg-green-600 text-white px-4 py-2 rounded shadow">
+        <div className="fixed top-5 right-5 bg-green-600 text-white px-4 py-2 rounded shadow">
           {toast}
         </div>
       )}
@@ -55,9 +70,7 @@ function CreatePost() {
       {/* FORM */}
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg 
-        bg-gray-900 border border-gray-800 
-        p-8 rounded-2xl shadow"
+        className="w-full max-w-lg bg-gray-900 border border-gray-800 p-8 rounded-2xl shadow"
       >
         <h2 className="text-2xl font-bold mb-6 text-center text-white">
           Create New Post
@@ -74,9 +87,7 @@ function CreatePost() {
           placeholder="Enter post title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-3 mb-4 rounded-lg 
-            bg-gray-800 text-white border border-gray-700
-            focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-3 mb-4 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         {/* BODY */}
@@ -85,18 +96,14 @@ function CreatePost() {
           placeholder="Write your content..."
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          className="w-full p-3 mb-6 rounded-lg 
-            bg-gray-800 text-white border border-gray-700
-            focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-3 mb-6 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         {/* BUTTON */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white 
-            py-3 rounded-lg font-medium 
-            hover:bg-blue-700 transition disabled:opacity-50"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
         >
           {loading ? "Submitting..." : "Publish Post"}
         </button>
